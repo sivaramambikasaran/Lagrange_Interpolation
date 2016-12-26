@@ -19,8 +19,10 @@ More documentation to follow soon. In the meantime, you can browse through the h
 
 The plot generated from the individual file is shown below:
 
-![Chebyshev interpolation with 100 nodes and function values in the interval [-1,1]](https://github.com/sivaramambikasaran/Lagrange_Interpolation/blob/master/chebyshev_nodes.png)
-
 ![Interpolation with 10 random nodes and function values in the interval [-1,1]](https://github.com/sivaramambikasaran/Lagrange_Interpolation/blob/master/random_nodes.png)
 
 ![Interpolation with 10 uniformly spaced nodes and function values in the interval [-1,1]](https://github.com/sivaramambikasaran/Lagrange_Interpolation/blob/master/uniform_nodes.png)
+
+![Interpolation with 10 Chebyshev nodes and function values in the interval [-1,1]](https://github.com/sivaramambikasaran/Lagrange_Interpolation/blob/master/chebyshev_nodes_10.png)
+
+![Interpolation with 100 Chebyshev nodes and function values in the interval [-1,1]](https://github.com/sivaramambikasaran/Lagrange_Interpolation/blob/master/chebyshev_nodes.png)
