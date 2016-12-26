@@ -1,7 +1,22 @@
 #include"CPLOT/cplot.hpp"
 
-double Lagrange(std::vector<double> x, std::vector<double> f, double xplot) {
-	int N			=	x.size();
+class Lagrange {
+public:
+	std::vector<double> x;
+	std::vector<double> f;
+	int N;
+
+	std::vector<double> xplot;
+	std::vector<double> fplot;
+	int M;
+
+	std::string filename;
+
+	double polyInterp(std::vector<double> x, std::vector<double> f, double xplot);
+	Lagrange(std::string filename, std::vector<double> x, std::vector<double> f, int M);
+};
+
+double Lagrange::polyInterp(std::vector<double> x, std::vector<double> f, double xplot) {
 	double fplot	=	0.0;
 	for (int j=0; j<N; ++j) {
 		double ftemp=	f[j];
@@ -16,15 +31,18 @@ double Lagrange(std::vector<double> x, std::vector<double> f, double xplot) {
 	return fplot;
 }
 
-void plotinterp(std::string filename, std::vector<double> x, std::vector<double> f, int M) {
-	std::vector<double> xplot;
+Lagrange::Lagrange(std::string filename, std::vector<double> x, std::vector<double> f, int M) {
+	this->x	=	x;
+	this->f	=	f;
+	this->N	=	x.size();
+	this->M	=	M;
 
 	for (int j=0; j<M; ++j) {
 		xplot.push_back(-1.0+2.0*double(j)/M);
 	}
-	std::vector<double> fplot;
+
 	for (int j=0; j<M; ++j) {
-		fplot.push_back(Lagrange(x, f, xplot[j]));
+		fplot.push_back(polyInterp(x, f, xplot[j]));
 	}
 
 	double fmax	=	fplot[0];
