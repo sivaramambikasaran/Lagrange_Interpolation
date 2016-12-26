@@ -27,3 +27,8 @@
 *.exe
 *.out
 *.app
+
+# Log files
+*.log
+*.aux
+.DS_Store
