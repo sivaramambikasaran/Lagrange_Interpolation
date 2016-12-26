@@ -59,7 +59,7 @@ Lagrange::Lagrange(std::string filename, std::vector<double> x, std::vector<doub
 	cplot A(filename);
 	A.xlabel("x");
 	A.ylabel("f(x)");
-	A.title("Interpolation");
+	A.title(filename);
 	A.axes(-1,1,(1-fmin/fabs(fmin))*fmin,1.1*fmax);
 
 	plot myplot;
