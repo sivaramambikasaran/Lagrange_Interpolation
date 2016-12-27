@@ -1,7 +1,7 @@
-#include<iostream>
-#include<cstdlib>
-#include<cmath>
-#include"LAGRANGE/Lagrange.hpp"
+#include <iostream>
+#include <cstdlib>
+#include <cmath>
+#include "LAGRANGE/Lagrange.hpp"
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));

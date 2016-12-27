@@ -1,4 +1,4 @@
-#include"CPLOT/cplot.hpp"
+#include "CPLOT/cplot.hpp"
 
 class Lagrange {
 public:
