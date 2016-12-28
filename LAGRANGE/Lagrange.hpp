@@ -1,78 +1,135 @@
+#ifndef _LAGRANGE__HPP_
+#define _LAGRANGE__HPP_
+
+#include <vector>
 #include "CPLOT/cplot.hpp"
 
+void find_max_min(std::vector<double> f, double& fmax, double& fmin) {
+	int N	=	f.size();
+	fmax	=	f[0];
+	fmin	=	f[0];
+	for (int j=1; j<N; ++j) {
+		if (fmax < f[j]) {
+			fmax	=	f[j];
+		}
+		if (fmin > f[j]) {
+			fmin	=	f[j];
+		}
+	}
+}
+
 class Lagrange {
-public:
-	std::vector<double> x;
-	std::vector<double> f;
+private:
+	std::vector<double> xNodes;
+	std::vector<double> fNodes;
 	int N;
 
-	std::vector<double> xplot;
-	std::vector<double> fplot;
+	std::vector<double> xPlot;
+	std::vector<double> fPlot;
 	int M;
 
-	std::string filename;
+	double x;
+	double f;
 
-	double polyInterp(std::vector<double> x, std::vector<double> f, double xplot);
-	Lagrange(std::string filename, std::vector<double> x, std::vector<double> f, int M);
+	bool polyInterpComputed;
+
+	void polyInterp();
+
+public:
+	//	Sets up the object by accepting the interpolation nodes and the function values
+	Lagrange(std::vector<double> xNodes, std::vector<double> fNodes);
+
+	//	Obtains the value of the interpolant at a specific location
+	double polyInterp(double x);
+
+	//	Obtains the value of the interpolant at a set of locations
+	std::vector<double> polyInterp(std::vector<double> x);
+
+	//	Draws the interpolant; Output is in the form of a tex file
+	void drawplot(double a, double b, std::string fileName);
 };
 
-double Lagrange::polyInterp(std::vector<double> x, std::vector<double> f, double xplot) {
-	double fplot	=	0.0;
+Lagrange::Lagrange(std::vector<double> xNodes, std::vector<double> fNodes) {
+	this->xNodes		=	xNodes;
+	this->fNodes		=	fNodes;
+	this->N				=	xNodes.size();
+	polyInterpComputed	=	false;
+}
+
+double Lagrange::polyInterp(double x) {
+	this->x		=	x;
+	f			=	0.0;
 	for (int j=0; j<N; ++j) {
-		double ftemp=	f[j];
+		double ftemp=	fNodes[j];
 		for (int k=0; k<j; ++k) {
-			ftemp*=((xplot-x[k])/(x[j]-x[k]));
+			ftemp*=((x-xNodes[k])/(xNodes[j]-xNodes[k]));
 		}
 		for (int k=j+1; k<N; ++k) {
-			ftemp*=((xplot-x[k])/(x[j]-x[k]));			
+			ftemp*=((x-xNodes[k])/(xNodes[j]-xNodes[k]));
 		}
-		fplot+=ftemp;
+		f+=ftemp;
 	}
-	return fplot;
+	return f;
 }
 
-Lagrange::Lagrange(std::string filename, std::vector<double> x, std::vector<double> f, int M) {
-	this->x	=	x;
-	this->f	=	f;
-	this->N	=	x.size();
-	this->M	=	M;
-
+void Lagrange::polyInterp() {
+	polyInterpComputed	=	true;
+	this->fPlot.clear();
 	for (int j=0; j<M; ++j) {
-		xplot.push_back(-1.0+2.0*double(j)/M);
+		fPlot.push_back(polyInterp(xPlot[j]));
 	}
+}
 
-	for (int j=0; j<M; ++j) {
-		fplot.push_back(polyInterp(x, f, xplot[j]));
-	}
+std::vector<double> Lagrange::polyInterp(std::vector<double> x) {
+	this->xPlot	=	x;
+	this->M		=	xPlot.size();
+	polyInterp();
+	return fPlot;
+}
 
-	double fmax	=	fplot[0];
-	double fmin	=	fplot[0];
+void Lagrange::drawplot(double a, double b, std::string fileName) {
+	this->M		=	1000+100*N;
+	this->xPlot.clear();
+	xPlot.push_back(a);
+	double dx	=	(b-a)/(M-1);
 	for (int j=1; j<M; ++j) {
-		if (fplot[j] > fmax) {
-			fmax	=	fplot[j];
-		}
-		if (fplot[j] < fmin) {
-			fmin	=	fplot[j];
-		}
+		xPlot.push_back(xPlot[j-1]+dx);
 	}
 
-	cplot A(filename);
+	polyInterp();
+
+	double fmax, fmin;
+	double xmax, xmin;
+	find_max_min(fPlot, fmax, fmin);
+	find_max_min(xPlot, xmax, xmin);
+
+	//	Setting up the canvas
+	cplot A(fileName);
 	A.xlabel("x");
 	A.ylabel("f(x)");
-	A.title(filename);
-	A.axes(-1,1,(1-fmin/fabs(fmin))*fmin,1.1*fmax);
+	A.title("Interpolation");
+	A.axes(xmin-0.1*xmin/fabs(xmin)*xmin, xmax + 0.1*xmax/fabs(xmax)*xmax, fmin - 0.1*fmin/fabs(fmin)*fmin, fmax + 0.1*fmax/fabs(fmax)*fmax);
 
+	//	Setting up the plot; Plotting the interpolated curve
 	plot myplot;
-	myplot.xdata(xplot);
-	myplot.ydata(fplot);
+	myplot.xdata(xPlot);
+	myplot.ydata(fPlot);
 	myplot.curve("","black","thick",true);
-	myplot.marks("no marks", "");
+	myplot.marks("no marks","");
+
+	//	Adding the plot to the canvas
 	A.plots.push_back(myplot);
 
-	myplot.xdata(x);
-	myplot.ydata(f);
+	//	Setting up the plot; Plotting the interpolation nodes
+	myplot.xdata(xNodes);
+	myplot.ydata(fNodes);
 	myplot.marks("only marks","red");
+
+	//	Adding the plot to the canvas
 	A.plots.push_back(myplot);
 
+	//	Making the canvas with the plot(s)
 	A.makeplot();
 }
+
+#endif //_LAGRANGE__HPP_

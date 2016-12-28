@@ -3,10 +3,18 @@
 #include <cmath>
 #include "LAGRANGE/Lagrange.hpp"
 
+void display(std::vector<double> f) {
+	for (int j=0; j<f.size(); ++j) {
+		std::cout << f[j] << "\t";
+	}
+}
+
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
 	int N			=	atoi(argv[1]);
-	int M			=	atoi(argv[2]);
+
+	//	Generates random set of function values at the interpolation nodes
+
 	double RMAX		=	RAND_MAX;
 
 	std::vector<double> f;
@@ -25,7 +33,9 @@ int main(int argc, char* argv[]) {
 		x.push_back(-1.0+2.0*rand()/RMAX);
 	}
 
-	Lagrange random_nodes("random_nodes.tex", x, f, M);
+	Lagrange random_nodes(x, f);
+
+	random_nodes.drawplot(-1, 1, "random_nodes.tex");
 
 	/****************************/
 	//	Uniformly spaced points
@@ -36,7 +46,10 @@ int main(int argc, char* argv[]) {
 		x.push_back(-1.0+(2.0*j+1)/N);
 	}
 
-	Lagrange uniform_nodes("uniform_spaced_nodes.tex", x, f, M);
+	Lagrange uniform_nodes(x, f);
+
+	uniform_nodes.drawplot(-1, 1, "uniform_spaced_nodes.tex");
+
 	/****************************/
 	//	Chebyshev points
 	/****************************/
@@ -47,5 +60,6 @@ int main(int argc, char* argv[]) {
 		x.push_back(sin(0.5*pi*j/N));
 	}
 
-	Lagrange cheb_nodes("chebyshev_nodes.tex", x, f, M);
+	Lagrange chebyshev_nodes(x, f);
+	chebyshev_nodes.drawplot(-1, 1, "chebyshev_nodes.tex");
 }

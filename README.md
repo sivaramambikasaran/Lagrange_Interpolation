@@ -1,7 +1,7 @@
 # LAGRANGE
 ===
 
-Obtains Langrange interpolation, given a set of input data points in the [-1,1] and the function values at those points. Also, plots the interpolant in the interval.
+Obtains Langrange interpolation, given a set of input data points in the [-1,1] and the function values at those points. Also, plots the interpolant in the interval. You need the <a href="https://github.com/sivaramambikasaran/cplot">CPLOT</a> library for plotting.
 
 This is a pure header only library and hence using this is pretty straight forward. There is no binary library to link to, no configured header file and all that annoying s$!t.
 

@@ -14,7 +14,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf *.out ./examples/*.o ./LAGRANGE/*.o ./exec/*
+	rm -rf *.out ./examples/*.o ./LAGRANGE/*.o ./exec/* *.pdf *.aux *.tex *.log .DS_Store .*.lb *.gz
 
 tar:
 	tar -zcvf cplot.tar.gz ./makefile.mk ./exec ./LAGRANGE ./examples ./README.md ./LICENSE.md
