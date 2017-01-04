@@ -88,7 +88,7 @@ std::vector<double> Lagrange::polyInterp(std::vector<double> x) {
 }
 
 void Lagrange::drawplot(double a, double b, std::string fileName) {
-	this->M		=	1000+100*N;
+	this->M		=	1000+10*N;
 	this->xPlot.clear();
 	xPlot.push_back(a);
 	double dx	=	(b-a)/(M-1);
